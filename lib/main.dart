@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'app_brain.dart';
 
-TfBrain tfBrain = TfBrain();
+AppBrain appBrain = AppBrain();
 
-void main() => runApp(Quizzler());
+void main() => runApp(TrueOrFalse());
 
-class Quizzler extends StatelessWidget {
+class TrueOrFalse extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -30,10 +30,100 @@ class QuizPage extends StatefulWidget {
 class _QuizPageState extends State<QuizPage> {
   List<Icon> scoreKeeper = [];
 
+  Expanded buildTrueButton(){
+    return Expanded(
+      child: Padding(
+        padding: EdgeInsets.all(10.0),
+        child: Card(
+          child: FlatButton(
+            textColor: Colors.white,
+            color: Colors.green,
+            child: Text(
+              'True',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20.0,
+              ),
+            ),
+            onPressed: () {
+              bool correctAnswer = appBrain.getQestionAnswer();
 
+              if (correctAnswer == true) {
+                setState(() {
+                  scoreKeeper.add(
+                    Icon(
+                      Icons.check,
+                      color: Colors.green,
+                    ),
+                  );
+                });
+              } else {
+                setState(() {
+                  scoreKeeper.add(
+                    Icon(
+                      Icons.close,
+                      color: Colors.red,
+                    ),
+                  );
+                });
+              }
 
-  int questionNumber = 0;
+              //The user picked true.
+              setState(() {
+                appBrain.nextQuestion();
+              });
+            },
+          ),
+        ),
+      ),
+    );
+  }
+  Expanded buildFalseButton(){
+    return Expanded(
+      child: Padding(
+        padding: EdgeInsets.all(10.0),
+        child: Card(
+          child: FlatButton(
+            color: Colors.red,
+            child: Text(
+              'False',
+              style: TextStyle(
+                fontSize: 20.0,
+                color: Colors.white,
+              ),
+            ),
+            onPressed: () {
+              bool correctAnswer = appBrain.getQestionAnswer();
 
+              if (correctAnswer == false) {
+                setState(() {
+                  scoreKeeper.add(
+                    Icon(
+                      Icons.check,
+                      color: Colors.green,
+                    ),
+                  );
+                });
+              } else {
+                setState(() {
+                  scoreKeeper.add(
+                    Icon(
+                      Icons.close,
+                      color: Colors.red,
+                    ),
+                  );
+                });
+              }
+              setState(() {
+                appBrain.nextQuestion();
+              });
+              //The user picked false.
+            },
+          ),
+        ),
+      ),
+    );
+ }
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -46,7 +136,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                tfBrain.questions[questionNumber].questionText,
+                appBrain.getQuestionText(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -56,92 +146,8 @@ class _QuizPageState extends State<QuizPage> {
             ),
           ),
         ),
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.all(15.0),
-            child: FlatButton(
-              textColor: Colors.white,
-              color: Colors.green,
-              child: Text(
-                'True',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0,
-                ),
-              ),
-              onPressed: () {
-                bool correctAnswer = tfBrain.questions[questionNumber].questionAnswer;
-
-                if (correctAnswer == true) {
-                  setState(() {
-                    scoreKeeper.add(
-                      Icon(
-                        Icons.check,
-                        color: Colors.green,
-                      ),
-                    );
-                  });
-                } else {
-                  setState(() {
-                    scoreKeeper.add(
-                      Icon(
-                        Icons.close,
-                        color: Colors.red,
-                      ),
-                    );
-                  });
-                }
-
-                //The user picked true.
-                setState(() {
-                  questionNumber++;
-                });
-              },
-            ),
-          ),
-        ),
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.all(15.0),
-            child: FlatButton(
-              color: Colors.red,
-              child: Text(
-                'False',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.white,
-                ),
-              ),
-              onPressed: () {
-                bool correctAnswer = tfBrain.questions[questionNumber].questionAnswer;
-
-                if (correctAnswer == false) {
-                  setState(() {
-                    scoreKeeper.add(
-                      Icon(
-                        Icons.check,
-                        color: Colors.green,
-                      ),
-                    );
-                  });
-                } else {
-                  setState(() {
-                    scoreKeeper.add(
-                      Icon(
-                        Icons.close,
-                        color: Colors.red,
-                      ),
-                    );
-                  });
-                }
-                setState(() {
-                  questionNumber++;
-                });
-                //The user picked false.
-              },
-            ),
-          ),
-        ),
+        buildTrueButton(),
+        buildFalseButton(),
         Row(
           children: scoreKeeper,
         )
@@ -153,4 +159,3 @@ class _QuizPageState extends State<QuizPage> {
 /*
 
 */
-
