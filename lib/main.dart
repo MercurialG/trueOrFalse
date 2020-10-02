@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:quizzler/question.dart';
 import 'app_brain.dart';
 
 AppBrain appBrain = AppBrain();
-
 void main() => runApp(TrueOrFalse());
 
 class TrueOrFalse extends StatelessWidget {
@@ -29,7 +29,7 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
   List<Icon> scoreKeeper = [];
-
+  Question currentQuestion;
   Expanded buildTrueButton(){
     return Expanded(
       child: Padding(
@@ -46,7 +46,7 @@ class _QuizPageState extends State<QuizPage> {
               ),
             ),
             onPressed: () {
-              bool correctAnswer = appBrain.getQestionAnswer();
+              bool correctAnswer = currentQuestion.questionAnswer;
 
               if (correctAnswer == true) {
                 setState(() {
@@ -70,7 +70,7 @@ class _QuizPageState extends State<QuizPage> {
 
               //The user picked true.
               setState(() {
-                appBrain.nextQuestion();
+                currentQuestion = appBrain.nextQuestion();
               });
             },
           ),
@@ -93,7 +93,7 @@ class _QuizPageState extends State<QuizPage> {
               ),
             ),
             onPressed: () {
-              bool correctAnswer = appBrain.getQestionAnswer();
+              bool correctAnswer = currentQuestion.questionAnswer;
 
               if (correctAnswer == false) {
                 setState(() {
@@ -115,7 +115,7 @@ class _QuizPageState extends State<QuizPage> {
                 });
               }
               setState(() {
-                appBrain.nextQuestion();
+               currentQuestion = appBrain.nextQuestion();
               });
               //The user picked false.
             },
@@ -123,9 +123,15 @@ class _QuizPageState extends State<QuizPage> {
         ),
       ),
     );
- }
+ }  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    currentQuestion = appBrain.nextQuestion();
+  }
   @override
   Widget build(BuildContext context) {
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -136,7 +142,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                appBrain.getQuestionText(),
+                currentQuestion.questionText,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,

@@ -6,5 +6,9 @@ class Question {
     questionText = q;
     questionAnswer = a;
   }
-
+@override
+  String toString() {
+    // TODO: implement toString
+    return questionText;
+  }
 }
